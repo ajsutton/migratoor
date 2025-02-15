@@ -33,6 +33,7 @@ contract Migratoor {
         bytes memory chainData;
         for (uint256 i = 0; i < chainCount; i++) {
             (, , IDisputeGame game) = gameFactories[i].gameAtIndex(_gameIdxs[i]);
+            // TODO: Check the game is a valid, finalized game - respected game type, not blacklisted etc
             if (game.status() != GameStatus.DEFENDER_WINS) {
                 revert InvalidGameStatus();
             }
