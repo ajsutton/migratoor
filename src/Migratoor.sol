@@ -10,7 +10,6 @@ error InvalidGameStatus();
 error TimestampMismatch();
 
 contract Migratoor {
-
     /// @notice The index of the block number in the RLP-encoded block header.
     uint256 internal constant HEADER_TIMESTAMP_INDEX = 11;
     uint8 internal constant SUPER_VERSION = uint8(1);
@@ -27,12 +26,16 @@ contract Migratoor {
         return gameFactories.length;
     }
 
-    function migrate(uint256[] calldata _gameIdxs, OutputRootProof[] calldata _outputs, bytes[] calldata _headerRLP) external view returns (bytes memory super_, bytes32 superRoot_) {
+    function migrate(uint256[] calldata _gameIdxs, OutputRootProof[] calldata _outputs, bytes[] calldata _headerRLP)
+        external
+        view
+        returns (bytes memory super_, bytes32 superRoot_)
+    {
         uint256 chainCount = gameFactories.length;
         uint256 expectedTimestamp = 0;
         bytes memory chainData;
         for (uint256 i = 0; i < chainCount; i++) {
-            (, , IDisputeGame game) = gameFactories[i].gameAtIndex(_gameIdxs[i]);
+            (,, IDisputeGame game) = gameFactories[i].gameAtIndex(_gameIdxs[i]);
             // TODO: Check the game is a valid, finalized game - respected game type, not blacklisted etc
             if (game.status() != GameStatus.DEFENDER_WINS) {
                 revert InvalidGameStatus();
@@ -69,13 +72,12 @@ contract Migratoor {
 
             chainData = abi.encodePacked(chainData, chainIDs[i], outputRoot);
         }
-        bytes memory superBytes =  abi.encodePacked(SUPER_VERSION, uint64(expectedTimestamp), chainData);
+        bytes memory superBytes = abi.encodePacked(SUPER_VERSION, uint64(expectedTimestamp), chainData);
         bytes32 superRoot = keccak256(superBytes);
         // TODO: call AnchorStateRegistry.updateAnchorState(expectedTimestamp, superRoot);
         // Or just put this method on AnchorStateRegistry and it can update itself.
         return (superBytes, superRoot);
     }
-
 
     /// @notice Hashes the various elements of an output root proof into an output root hash which
     ///         can be used to check if the proof is valid.

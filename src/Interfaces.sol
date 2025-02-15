@@ -5,7 +5,6 @@ interface IDisputeGame {
 
     function status() external view returns (GameStatus);
 
-
     function rootClaim() external pure returns (bytes32 rootClaim_);
 
     function l2BlockNumber() external pure returns (uint256 l2BlockNumber_);
@@ -13,9 +12,9 @@ interface IDisputeGame {
 
 interface IDisputeGameFactory {
     function gameAtIndex(uint256 _index)
-    external
-    view
-    returns (uint32 gameType_, uint64 timestamp_, IDisputeGame proxy_);
+        external
+        view
+        returns (uint32 gameType_, uint64 timestamp_, IDisputeGame proxy_);
 }
 
 /// @notice The current status of the dispute game.

@@ -51,7 +51,7 @@ library RLPReader {
             ptr := add(_in, 32)
         }
 
-        out_ = RLPItem({ length: _in.length, ptr: ptr });
+        out_ = RLPItem({length: _in.length, ptr: ptr});
     }
 
     /// @notice Reads an RLP list value into a list of RLP items.
@@ -74,7 +74,7 @@ library RLPReader {
         uint256 offset = listOffset;
         while (offset < _in.length) {
             (uint256 itemOffset, uint256 itemLength,) = _decodeLength(
-                RLPItem({ length: _in.length - offset, ptr: MemoryPointer.wrap(MemoryPointer.unwrap(_in.ptr) + offset) })
+                RLPItem({length: _in.length - offset, ptr: MemoryPointer.wrap(MemoryPointer.unwrap(_in.ptr) + offset)})
             );
 
             // We don't need to check itemCount < out.length explicitly because Solidity already
@@ -242,7 +242,7 @@ library RLPReader {
         assembly {
             let dest := add(out_, 32)
             let i := 0
-            for { } lt(i, _length) { i := add(i, 32) } { mstore(add(dest, i), mload(add(src, i))) }
+            for {} lt(i, _length) { i := add(i, 32) } { mstore(add(dest, i), mload(add(src, i))) }
 
             if gt(i, _length) { mstore(add(dest, _length), 0) }
         }
